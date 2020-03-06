@@ -29,7 +29,7 @@ var lineFunction = d3.line()
                       .x(function(d) { return d.lat; })
                       .y(function(d) { return d.lon; })
 
-d3.csv("https://raw.githubusercontent.com/MjStansfi/visuals/master/scaled.csv",function(data) {
+d3.csv("scaled.csv",function(data) {
   data.forEach(function(d) {
     d.lat = +d.lat;
     d.lon = +d.lon
@@ -43,23 +43,42 @@ d3.csv("https://raw.githubusercontent.com/MjStansfi/visuals/master/scaled.csv",f
 	path = svg.data(data)
 	.append("path")
 	.attr("d", lineFunction(data));
+
+path2 = svg.data(data)
+	.append("path")
+	.attr("d", lineFunction(data))
+	.attr("stroke-dasharray", 1 + " " + 5)
+        .attr("stroke-dashoffset", 1000)
+        .style('stroke','black')
+
+
+	
 	repeat();
+
+
+///path.style("stroke", "#ddd")
+//    .style("stroke-dasharray", "4,4")
+ //   .attr("d", lineFunction(data));
 	
 function repeat(){
 
  var totalLength = path.node().getTotalLength();
 
+
+
       path
-        .attr("stroke-dasharray", totalLength + " " + totalLength)
+
+        .attr("stroke-dasharray", 100 + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
         .transition()
-          .duration(4000)
+          .duration(6000)
           .ease(d3.easeLinear)
           .attr("stroke-dashoffset", 0)
           .on('end', repeat);
      
 }
 });
+
 
 	</script>
   </body>
