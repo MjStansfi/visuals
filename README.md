@@ -2,4 +2,4 @@
 
 https://mjstansfi.github.io/visuals/
 
-![My runs](my-run.png)
+![My runs](my-run.PNG)
