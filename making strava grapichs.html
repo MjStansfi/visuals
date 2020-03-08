@@ -1,0 +1,174 @@
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+			<title>RIP</title>
+			<script src="https://d3js.org/d3.v4.min.js"></script>
+			<style>
+
+				html,body {
+					margin: 0;
+					padding: 10;
+					background: #3c3434;
+				}
+
+				path{
+					stroke: #8BC34A;
+					fill: none;
+					stroke-width: 2px;
+				}
+
+				.block{
+					/*border: 1px solid white;*/
+				}
+
+
+
+			</style>
+		</head>
+		<body>
+
+			<script type="text/javascript">
+
+				let cells_wide = 20;
+				let cells_high = 12;
+				let block_width = 20;
+				let block_height = block_width;
+
+				let lineFunction = d3.line()
+				.x(function(d) { return d.lat; })
+				.y(function(d) { return d.lon; })
+
+				d3.select("body")
+				.style("width",cells_wide*block_width+"px")
+				.style("height",cells_high*block_height+"px")
+				.style("padding",10+"px")
+
+				g = d3.select("body")
+				.append("g")
+
+
+				function makeblocks(){
+
+					console.log(
+						"Cells wide:" + cells_wide,
+						"\nCells high:" + cells_high,
+						"\nBlock width:" + block_width,
+						"\nBlock height:" + block_height);
+
+					let startx = 0;
+					let starty = 0;
+					for (i = 0; i <= cells_wide*cells_high; i++){
+
+						 g.append("svg")
+						.attr("width",block_width)
+						.attr("height", block_height)
+				// .attr("x", startx)
+				// .attr("y",starty)
+				.attr("id","block"+i)
+				.attr("class","block")
+				.attr("viewBox","0 0 100 100"); //scales block to right size/
+
+
+
+			}
+
+
+
+		};
+
+		makeblocks();
+
+
+		d3.csv("scaled-dad.csv",function(data) {
+			data.forEach(function(d) {
+				d.lat = +d.lat;
+				d.lon = +d.lon;
+				d.index = +d.index;
+		    // lat.push(d.lat);
+		    // lon.push(d.lon);
+		});
+
+			console.log(data[0])
+
+			for (i = 1; i <= cells_wide*cells_high; i++){
+
+				console.log("i:"+i);
+
+				temp_data = data
+				.filter(function(d){return d.index == i;})
+
+		
+				d3.select("#block"+(i-1))
+				.data(temp_data)
+				.append("path")
+				.attr("d", lineFunction(temp_data))
+
+
+			}
+
+
+		});
+
+		
+
+
+
+
+	/*
+		
+		d3.csv("scaled.csv",function(data) {
+		  data.forEach(function(d) {
+		    d.lat = +d.lat;
+		    d.lon = +d.lon
+		  });
+
+		  svg = d3.select("body").append("svg")
+		  	.attr("class", "run")
+		  	.attr("width", 100)
+		    .attr("height", 100) 
+		    .attr('transform','translate(10 10)');
+
+			path = svg.data(data)
+			.append("path")
+			.attr("d", lineFunction(data));
+
+		path2 = svg.data(data)
+			.append("path")
+			.attr("d", lineFunction(data))
+			.attr("stroke-dasharray", 1 + " " + 5)
+		        .attr("stroke-dashoffset", 1000)
+		        .style('stroke','black')
+
+
+			
+			repeat();
+
+
+		///path.style("stroke", "#ddd")
+		//    .style("stroke-dasharray", "4,4")
+		 //   .attr("d", lineFunction(data));
+			
+		function repeat(){
+
+		 var totalLength = path.node().getTotalLength();
+
+
+
+		      path
+
+		        .attr("stroke-dasharray", 100 + " " + totalLength)
+		        .attr("stroke-dashoffset", totalLength)
+		        .transition()
+		          .duration(6000)
+		          .ease(d3.easeLinear)
+		          .attr("stroke-dashoffset", 0)
+		          .on('end', repeat);
+		     
+		}
+	});*/
+
+
+</script>
+</body>
+</html>
